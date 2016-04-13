@@ -1,0 +1,96 @@
+body.items.edit #save .delete-confirm:after {
+  content: ' Item';
+}
+
+#cai-type, #cai-parent {
+  width: 100%;
+}
+
+#cai-year, #cai-month, #cai-day, #cai-range-year, #cai-range-month, #cai-range-day {
+  width: 30%;
+  margin-right: 3%
+}
+
+#element-40 .use-html {
+  display: none;
+}
+
+#cai-month, #cai-day, #cai-range-year, #cai-range-month, #cai-range-day {
+  display: none;
+}
+
+li.to-be-added {
+  display: none;
+}
+
+.tag-list-unused {
+  padding: 0;
+}
+
+.tag-list-unused li {
+  height: 22px;
+  background: #a4c637;
+  background: -webkit-linear-gradient(top, #A4C637, #75940A);
+  background: -moz-linear-gradient(top, #A4C637, #75940A);
+  background: -o-linear-gradient(top, #A4C637, #75940A);
+  background: linear-gradient(to bottom, #A4C637, #75940A);
+  -webkit-box-shadow: 0px 1px 0px 0px #bdd662 inset, 0px -1px 0px 0px #6a821a inset, 0px 2px 2px 0px #d4d4d4;
+  -moz-box-shadow: 0px 1px 0px 0px #bdd662 inset, 0px -1px 0px 0px #6a821a inset, 0px 2px 2px 0px #d4d4d4;
+  box-shadow: 0px 1px 0px 0px #bdd662 inset, 0px -1px 0px 0px #6a821a inset, 0px 2px 2px 0px #d4d4d4;
+  border: 1px solid #749308;
+  font-family: "Arvo", serif;
+  display: inline-block;
+  margin: 0 0 10px 0;
+  color: #ffffff;
+  text-shadow: -1px -1px 1px rgba(0,0,0,.5);
+  padding: 5px 10px;
+}
+
+.tag-list-unused li .tag, .tag-list-unused li a {
+  color: #ffffff;
+  display: inline-block;
+}
+
+.tag-list-unused li.added-not {
+  background: #22546b;
+  background: -webkit-linear-gradient(top, #22546b, #102d3b);
+  background: -moz-linear-gradient(top, #22546b, #102d3b);
+  background: -o-linear-gradient(top, #22546b, #102d3b);
+  background: linear-gradient(to bottom, #22546b, #102d3b);
+  -webkit-box-shadow: 0px 1px 0px 0px #526c80 inset, 0px -1px 0px 0px #142233 inset, 0px 2px 2px 0px #d4d4d4;
+  -moz-box-shadow: 0px 1px 0px 0px #526c80 inset, 0px -1px 0px 0px #142233 inset, 0px 2px 2px 0px #d4d4d4;
+  box-shadow: 0px 1px 0px 0px #526c80 inset, 0px -1px 0px 0px #142233 inset, 0px 2px 2px 0px #d4d4d4;
+  border: 1px solid #11303F;
+}
+
+.add-tag a {
+  text-indent: -9999px;
+}
+
+.tag-list-unused li .add-tag a {
+  text-indent: -9999px;
+  width: 17px;
+  height: 17px;
+  margin-left: 5px;
+  position: relative;
+  top: 3px;
+}
+
+.tag-list-unused li .add-tag a:after {
+  content: "\f055";
+  font-family: "FontAwesome";
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, .3);
+  box-shadow: 0px -1px 1px rgba(255, 255, 255, .3);
+  border-radius: 20px;
+  color: #99C05C;
+  display: block;
+  position: relative;
+  font-size: 14px;
+  top: 0;
+  float: left;
+  text-indent: 3px;
+  line-height: 19px;
+  text-shadow: none;
+}
