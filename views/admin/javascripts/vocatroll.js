@@ -24,6 +24,7 @@ var currentValues = [
 		//	alert("My Change");
 		//});
 
+      if (Omeka !== null && typeof Omeka === 'object' && Omeka.Items !== null && typeof Omeka.Items === 'object') {
 		Omeka.Items.changeItemType = function (changeItemTypeUrl, itemId) {
 			$('#change_type').hide();
 			$('#item-type').change(function () {
@@ -61,6 +62,8 @@ var currentValues = [
 				});
 			});
 		};
+        
+      }
 
 
        function vocatrollChangeField (vocaObject) {

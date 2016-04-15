@@ -113,7 +113,10 @@ SQL
   /**
    * Admin Head
    */
-  public function hookAdminHead() {        
+  public function hookAdminHead() {
+  
+  
+      
     $tags = array();
     if (is_array($tg = get_records('Tag',array('sort_field' => 'name', 'sort_dir' => 'a',),15000))) {
       foreach ($tg as $t) {
