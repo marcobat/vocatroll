@@ -115,39 +115,121 @@ SQL
    */
   public function hookAdminHead() {
   
-  
-      
-    $tags = array();
-    if (is_array($tg = get_records('Tag',array('sort_field' => 'name', 'sort_dir' => 'a',),15000))) {
-      foreach ($tg as $t) {
-        $tags[] = $t->name;
-      }
-    }
-    $itemTags = array();
     if (get_current_record('item', false)) {
     
-      if (metadata('item','has tags')) {
-        $itemTags = explode(',', tag_string('Item',null,','));
-      }
       if (!$item_type_id = metadata('Item', 'item_type_id')) {
         $item_type_id = 0;
       }
 
-
-
-
       queue_js_file('vocatroll');
       queue_css_file('vocatroll');
-      $db = get_db();
+      $vocatroll_values = $this->_vocatroll_get_values($item_type_id);
+      queue_js_string('var customInput = '.json_encode($vocatroll_values).';');
+      $item_type_metadate = $this->_vocatroll_get_item_metadata_values();
+      queue_js_string('var item_type_metadate = '.json_encode($item_type_metadate).';');
+
+
+    }
+
+    if (get_current_record('Collection', false)) {
     
-      $coverage = false;
-      if (plugin_is_active('Coverage')) { // if the coverage plugin is active and installed
-        $result = $this->_db->query("SELECT `title` FROM `{$db->prefix}coverages` ORDER BY `sort`");
-        $coverage = array();
-        foreach ($result->fetchAll() as $c) {
-          $coverage[] = $c['title'];
-        }
+      queue_js_file('vocatroll');
+      queue_css_file('vocatroll');
+      $vocatroll_values = $this->_vocatroll_get_values(0);
+      queue_js_string('var customInput = '.json_encode($vocatroll_values).';');
+
+    }
+
+
+  }
+  
+  
+  
+  private function _vocatroll_get_item_metadata_values () {
+ 
+ 
+    $db = get_db();
+    $result = $this->_db->query(<<<SQL
+
+SELECT 
+
+`{$db->prefix}elements`.`id` AS `id`,
+`{$db->prefix}elements`.`element_set_id` AS `element_set_id`,
+
+`{$db->prefix}vocatroll_fields`.`item_type_id` AS `item_type_id`,
+
+CASE WHEN `{$db->prefix}vocatroll_fields`.`name`  != '' THEN
+  `{$db->prefix}vocatroll_fields`.`name`
+ELSE
+  `{$db->prefix}elements`.`name` 
+END AS `name`,
+
+CASE WHEN `{$db->prefix}vocatroll_fields`.`description`  != '' THEN
+  `{$db->prefix}vocatroll_fields`.`description`
+ELSE
+  `{$db->prefix}elements`.`description` 
+END AS `description`,
+
+`{$db->prefix}element_sets`.`name` AS `element_set_name`,
+
+CASE WHEN `{$db->prefix}vocatroll_fields`.`type` != '' THEN
+  `{$db->prefix}vocatroll_fields`.`type`
+ELSE
+  'text'
+END AS `type`,
+
+
+CASE WHEN `{$db->prefix}vocatroll_fields`.`options`  != '' THEN
+  `{$db->prefix}vocatroll_fields`.`options`
+ELSE
+  ''
+END AS `options`
+
+
+FROM
+
+`{$db->prefix}elements`
+
+INNER JOIN `{$db->prefix}vocatroll_fields` ON `{$db->prefix}vocatroll_fields`.`element_id` = `{$db->prefix}elements`.`id`
+LEFT JOIN `{$db->prefix}element_sets` ON `{$db->prefix}element_sets`.`id` = `{$db->prefix}elements`.`element_set_id`
+
+WHERE
+
+`{$db->prefix}element_sets`.`name` = 'Item Type Metadata'
+
+ORDER BY `{$db->prefix}elements`.`order`
+
+SQL
+);
+
+    $item_type_metadate = array();
+    foreach ($result->fetchAll() as $field) {
+      $item_type_metadate[$field['item_type_id']][] = array(
+        'elemName' => $field['name'],
+        'elemDescription' => $field['description'],
+        'elem' => $field['id'],
+        'elemtype' => $field['type'],
+        'elemSelected' => array(),
+        'elemlist' => explode("\r",$field['options']),
+      );
+        
+      
+    }
+    return $item_type_metadate;
+  }
+  
+  private function _vocatroll_get_values ($item_type_id) {
+
+    $db = get_db();
+    
+    $coverage = false;
+    if (plugin_is_active('Coverage')) { // if the coverage plugin is active and installed
+      $result = $this->_db->query("SELECT `title` FROM `{$db->prefix}coverages` ORDER BY `sort`");
+      $coverage = array();
+      foreach ($result->fetchAll() as $c) {
+        $coverage[] = $c['title'];
       }
+    }
     
     
     
@@ -234,110 +316,18 @@ SQL
           'elemSelected' => array(),
           'elemlist' => explode("\r",$field['options']),
         );
-        
       }
     }
 
-    queue_js_string('var customInput = '.json_encode($vocatroll_values).';');
-    
-    
- 
- 
-     $result = $this->_db->query(<<<SQL
-
-SELECT 
-
-`{$db->prefix}elements`.`id` AS `id`,
-`{$db->prefix}elements`.`element_set_id` AS `element_set_id`,
-
-`{$db->prefix}vocatroll_fields`.`item_type_id` AS `item_type_id`,
-
-CASE WHEN `{$db->prefix}vocatroll_fields`.`name`  != '' THEN
-  `{$db->prefix}vocatroll_fields`.`name`
-ELSE
-  `{$db->prefix}elements`.`name` 
-END AS `name`,
-
-CASE WHEN `{$db->prefix}vocatroll_fields`.`description`  != '' THEN
-  `{$db->prefix}vocatroll_fields`.`description`
-ELSE
-  `{$db->prefix}elements`.`description` 
-END AS `description`,
-
-`{$db->prefix}element_sets`.`name` AS `element_set_name`,
-
-CASE WHEN `{$db->prefix}vocatroll_fields`.`type` != '' THEN
-  `{$db->prefix}vocatroll_fields`.`type`
-ELSE
-  'text'
-END AS `type`,
 
 
-CASE WHEN `{$db->prefix}vocatroll_fields`.`options`  != '' THEN
-  `{$db->prefix}vocatroll_fields`.`options`
-ELSE
-  ''
-END AS `options`
-
-
-FROM
-
-`{$db->prefix}elements`
-
-INNER JOIN `{$db->prefix}vocatroll_fields` ON `{$db->prefix}vocatroll_fields`.`element_id` = `{$db->prefix}elements`.`id`
-LEFT JOIN `{$db->prefix}element_sets` ON `{$db->prefix}element_sets`.`id` = `{$db->prefix}elements`.`element_set_id`
-
-WHERE
-
-`{$db->prefix}element_sets`.`name` = 'Item Type Metadata'
-
-ORDER BY `{$db->prefix}elements`.`order`
-
-SQL
-);
-
-    $item_type_metadate = array();
-    foreach ($result->fetchAll() as $field) {
-
-
-        $item_type_metadate[$field['item_type_id']][] = array(
-          'elemName' => $field['name'],
-          'elemDescription' => $field['description'],
-          'elem' => $field['id'],
-          'elemtype' => $field['type'],
-          'elemSelected' => array(),
-          'elemlist' => explode("\r",$field['options']),
-        );
-        
-      
-    }
-
-    queue_js_string('var item_type_metadate = '.json_encode($item_type_metadate).';');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    }
-    
-
-   
-    
-    
+    return  $vocatroll_values;
+  
   }
-
-
-
+  
+  
+  
+  
+  
+  
 }
