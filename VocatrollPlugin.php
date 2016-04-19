@@ -124,21 +124,33 @@ SQL
       }
     }
     $itemTags = array();
-    if (get_current_record('item', false) && metadata('item','has tags')){
-      $itemTags = explode(',', tag_string('Item',null,','));
-    }
-    queue_js_file('vocatroll');
-    queue_css_file('vocatroll');
-    $db = get_db();
+    if (get_current_record('item', false)) {
     
-    $coverage = false;
-    if (plugin_is_active('Coverage')) { // if the coverage plugin is active and installed
-      $result = $this->_db->query("SELECT `title` FROM `{$db->prefix}coverages` ORDER BY `sort`");
-      $coverage = array();
-      foreach ($result->fetchAll() as $c) {
-        $coverage[] = $c['title'];
+      if (metadata('item','has tags')) {
+        $itemTags = explode(',', tag_string('Item',null,','));
       }
-    }
+      if (!$item_type_id = metadata('Item', 'item_type_id')) {
+        $item_type_id = 0;
+      }
+
+
+
+
+      queue_js_file('vocatroll');
+      queue_css_file('vocatroll');
+      $db = get_db();
+    
+      $coverage = false;
+      if (plugin_is_active('Coverage')) { // if the coverage plugin is active and installed
+        $result = $this->_db->query("SELECT `title` FROM `{$db->prefix}coverages` ORDER BY `sort`");
+        $coverage = array();
+        foreach ($result->fetchAll() as $c) {
+          $coverage[] = $c['title'];
+        }
+      }
+    
+    
+    
     
     
     $result = $this->_db->query(<<<SQL
@@ -182,6 +194,16 @@ FROM
 
 INNER JOIN `{$db->prefix}vocatroll_fields` ON `{$db->prefix}vocatroll_fields`.`element_id` = `{$db->prefix}elements`.`id`
 LEFT JOIN `{$db->prefix}element_sets` ON `{$db->prefix}element_sets`.`id` = `{$db->prefix}elements`.`element_set_id`
+
+WHERE 
+
+(`{$db->prefix}element_sets`.`name` != 'Item Type Metadata' 
+OR
+(
+`{$db->prefix}element_sets`.`name` = 'Item Type Metadata' 
+AND
+`{$db->prefix}vocatroll_fields`.`item_type_id` = $item_type_id
+))
 
 ORDER BY `{$db->prefix}element_sets`.`name`, `{$db->prefix}elements`.`order`
 
@@ -291,6 +313,25 @@ SQL
     }
 
     queue_js_string('var item_type_metadate = '.json_encode($item_type_metadate).';');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    }
+    
 
    
     

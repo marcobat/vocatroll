@@ -150,7 +150,7 @@ FROM
 LEFT JOIN `{$db->prefix}elements` ON `{$db->prefix}elements`.`id` = `{$db->prefix}item_types_elements`.`element_id`
 LEFT JOIN `{$db->prefix}element_sets` ON `{$db->prefix}element_sets`.`id` = `{$db->prefix}elements`.`element_set_id`
 LEFT JOIN `{$db->prefix}item_types` ON `{$db->prefix}item_types`.`id` = `{$db->prefix}item_types_elements`.`item_type_id`
-LEFT JOIN `{$db->prefix}vocatroll_fields` ON `{$db->prefix}vocatroll_fields`.`element_id` = `{$db->prefix}elements`.`id`
+LEFT JOIN `{$db->prefix}vocatroll_fields` ON `{$db->prefix}vocatroll_fields`.`element_id` = `{$db->prefix}elements`.`id`  AND `{$db->prefix}vocatroll_fields`.`item_type_id` = `{$db->prefix}item_types_elements`.`item_type_id`
 
 WHERE
 
