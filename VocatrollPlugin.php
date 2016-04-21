@@ -39,7 +39,7 @@ class VocatrollPlugin extends Omeka_Plugin_AbstractPlugin {
             type            tinytext collate utf8_unicode_ci NOT NULL,
             options         text collate utf8_unicode_ci NOT NULL,
             PRIMARY KEY (id)
-        ) ENGINE=z DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SQL
 );
 
