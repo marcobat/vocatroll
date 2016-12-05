@@ -371,7 +371,7 @@ var currentValues = [
                                             rangeMonth: '',
                                             rangeDay: ''
                                         };
-                                    } else if (originalValues[0].length > 2) {
+                                    } else if (isNaN(originalValues[0])) {
                                         // month and year exact
                                         var currVal = {
                                             type: 'Exact',
@@ -422,7 +422,7 @@ var currentValues = [
                                     break;
                                 case 4:
                                     if (originalValues[3] == '(Circa)') {
-                                        // full date circa
+                                        // full date circa. yes! It makes no sense, but nothing prevents it from being entered this way ...
                                         var currVal = {
                                             type: 'Circa',
                                             year: originalValues[2],
